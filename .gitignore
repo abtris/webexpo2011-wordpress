@@ -1,1 +1,3 @@
 wordpress/wp-config.php
+wordpress/wp-content/plugins/*
+wordpress/wp-content/themes/*
