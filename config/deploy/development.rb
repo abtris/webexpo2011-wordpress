@@ -1,2 +1,3 @@
 role :web, "default"
-set :deploy_to, "/srv/www/beta-website.com"
+set :application, "beta-website.com"
+set :deploy_to, "#{projects_dir}/#{application}"

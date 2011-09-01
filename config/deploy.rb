@@ -1,21 +1,22 @@
+require 'railsless-deploy'
+require 'capistrano/ext/multistage'
+
 # GENERIC
 set :user,     "vagrant"
-set :runner,   "www-data"
+set :runner,   "vagrant"
 set :sudo,     false
-set :use_sudo, true
-set :application,       "webexpo2011"
+#set :use_sudo, true
+set :projects_dir,      "/srv/www"
 set :ssh_options, {:forward_agent => true}
 # ENV
 set :stages, %w(production development)
-set :default_stage, "development"
-
+set :default_stage,     "development"
 # SCM
 set :scm, :git
 set :repository,  "git@github.com:abtris/webexpo2011-wordpress.git"
 set :branch, "master"
-#set :deploy_via, :checkout
-#set :deploy_via, :remote_cache
-#set :deploy_via, :copy
+set :scm_verbose, true
+set :git_shallow_clone, 1
 
 
 def relative_path(from_str, to_str)

@@ -1,7 +1,7 @@
 <VirtualHost *>
-  ServerName <%=application%>.<%=project_hostname%>.<%=project_domain%> 
-  DocumentRoot <%= "#{current_path}/htdocs" %> 
-  <Directory <%= "#{current_path}/htdocs" %>>
+  ServerName <%=application%>
+  DocumentRoot <%= "#{current_path}/wordpress" %> 
+  <Directory <%= "#{current_path}/wordpress" %>>
     Options Indexes FollowSymLinks
     AllowOverride All
   </Directory>
