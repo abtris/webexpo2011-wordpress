@@ -1,22 +1,36 @@
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+# GENERIC
+set :user,     "vagrant"
+set :runner,   "www-data"
+set :sudo,     false
+set :use_sudo, true
+set :application,       "webexpo2011"
+set :ssh_options, {:forward_agent => true}
+# ENV
+set :stages, %w(production development)
+set :default_stage, "development"
 
-set :scm, :subversion
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+# SCM
+set :scm, :git
+set :repository,  "git@github.com:abtris/webexpo2011-wordpress.git"
+set :branch, "master"
+#set :deploy_via, :checkout
+#set :deploy_via, :remote_cache
+#set :deploy_via, :copy
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+def relative_path(from_str, to_str)
+  require 'pathname'
+  Pathname.new(to_str).relative_path_from(Pathname.new(from_str)).to_s
+end
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+namespace :deploy do
+  desc "Relative symlinks for current/"
+  task :symlink, :except => { :no_release => true } do
+    if releases[-2] # not the first release
+      previous_release_relative = relative_path(deploy_to,previous_release)
+      on_rollback { run "rm -f #{current_path}; ln -s #{previous_release_relative} #{current_path}; true" }
+    end
+    latest_release_relative = relative_path(deploy_to,latest_release)
+    run "rm -f #{current_path} && ln -s #{latest_release_relative} #{current_path}"
+  end
+end
